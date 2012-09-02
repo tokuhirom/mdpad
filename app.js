@@ -6,6 +6,7 @@
 var express = require('express')
   , md = require('github-flavored-markdown')
   , fs = require('fs')
+  , directory = require('./middleware/directory.js')
   , http = require('http')
   , path = require('path');
 
@@ -13,11 +14,12 @@ var app = express();
 
 var docdir;
 if (process.argv.length===3) {
-    docdir = process.argv[2];
+    docdir = path.normalize(path.resolve(process.argv[2]));
 } else {
     console.log("Usage: node app.js docdir");
     process.exit();
 }
+console.log("Path: " + docdir);
 
 app.configure(function(){
   app.set('port', process.env.PORT || 3000);
@@ -30,7 +32,7 @@ app.configure(function(){
   app.use(app.router);
   app.use(require('less-middleware')({ src: __dirname + '/public' }));
   app.use(express.static(path.join(__dirname, 'public')));
-  app.use(express.directory(docdir));
+  app.use(directory(docdir));
 });
 
 app.configure('development', function(){
@@ -38,12 +40,15 @@ app.configure('development', function(){
 });
 
 app.get(/\.(?:md|mkdn)$/, function (req, res) {
-    if (req.path.indexOf('..') >= 0) {
-        res.send(403);
-        return;
+    if (~req.path.indexOf('\0')) {
+        return res.send(403);
+    }
+    var filepath = path.normalize(path.join(docdir, req.path));
+    if (0 != filepath.indexOf(docdir)) {
+        return res.send(403);
     }
 
-    var src = fs.readFileSync(path.join(docdir, req.path), 'utf-8');
+    var src = fs.readFileSync(filepath, 'utf-8');
     var html = md.parse(src);
     var title = (function () {
         var m = html.match(/<h1>([^<>]+)<\/h1>/);
@@ -53,7 +58,7 @@ app.get(/\.(?:md|mkdn)$/, function (req, res) {
             return 'no title';
         }
     })();
-    res.render('md', { html: html, title: title });
+    res.render('md', { html: html, title: title, paths: directory.makePathArray(req.path) });
 });
 
 http.createServer(app).listen(app.get('port'), function(){

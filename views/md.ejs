@@ -16,19 +16,20 @@
     <script src="/javascripts/application.js"></script>
   </head>
   <body>
-
-<div class="navbar navbar-inverse navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container">
-          <div class="nav-collapse collapse">
-            <ul class="nav">
-              <li class="active"><a href="../">../</a></li>
-            </ul>
-          </div><!--/.nav-collapse -->
-        </div>
-      </div>
-    </div>
     <div class="container">
+        <div class="row">
+            <ul class="breadcrumb">
+            <li><a href="/">root</a> /</li>
+            <% paths.forEach(function (e) { %>
+                <% if (e[1].length===0) { return; } %>
+                <% if (e[2]) { %>
+                    <li><a href="<%= e[0] %>"><%= e[1] %></a> /</li>
+                <% } else { %>
+                    <li class="active"><%= e[1] %></li>
+                <% } %>
+            <% }); %>
+            </ul>
+        </div>
         <div class="row">
             <%- html %>
         </div>

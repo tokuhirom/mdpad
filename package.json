@@ -11,6 +11,7 @@
     "express": "3.0.0rc4",
     "ejs": "*",
     "github-flavored-markdown": "~1.0.1",
+    "strftime":"~0.4.7",
     "less-middleware": "*"
   },
   "main": "app.js",
@@ -18,7 +19,10 @@
     "doc": "docs"
   },
   "devDependencies": {},
-  "repository": "",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/tokuhirom/mdpad.git"
+  },
   "keywords": [
     "markdown"
   ],
