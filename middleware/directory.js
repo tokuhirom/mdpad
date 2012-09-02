@@ -20,6 +20,7 @@ var fs = require('fs')
   , path = require('path')
   , normalize = path.normalize
   , extname = path.extname
+  , md = require('github-flavored-markdown')
   , strftime = require('strftime')
   , join = path.join;
 
@@ -80,18 +81,37 @@ exports = module.exports = function directory(root, options){
             files.sort();
 
             res.render('directory', {
-                html: html(path, files, dir),
                 files: makeFileArray(path, files, dir),
                 strftime: strftime,
                 paths: makePathArray(dir)
             });
         });
       } else {
-        fs.readFile(path, 'utf-8', function (err, data) {
-            if (err) return next(err);
-            var title = '';
-            res.render('file', { body: data, title: title, paths: makePathArray(dir) });
-        });
+        if (path.match(/\.(md|mkdn)$/)) {
+            var src = fs.readFileSync(filepath, 'utf-8');
+            var html = md.parse(src);
+            var title = (function () {
+                var m = html.match(/<h1>([^<>]+)<\/h1>/);
+                if (m) {
+                    return m[1];
+                } else {
+                    return 'no title';
+                }
+            })();
+            res.render('md', { html: html, title: title, paths: makePathArray(req.path) });
+        } else if (path.match(/\.(png|bmp|jpg|jpeg|gif)$/)) {
+            if (req.query.raw) {
+                res.sendfile(path);
+            } else {
+                res.render('img', { path: req.path, paths: makePathArray(req.path) });
+            }
+        } else {
+            fs.readFile(path, 'utf-8', function (err, data) {
+                if (err) return next(err);
+                var title = '';
+                res.render('file', { body: data, title: title, paths: makePathArray(dir) });
+            });
+        }
       }
     });
   };
@@ -115,23 +135,6 @@ function makeFileArray(path, files, dir) {
             fs.statSync(join(path, file))
         ];
     });
-}
-
-/**
- * Map html `files`, returning an html unordered list.
- */
-function html(path, files, dir) {
-  return '<ul id="files">' + files.map(function(file){
-    var icon = ''
-      , classes = [];
-
-    return '<li><a href="'
-      + join(dir, file)
-      + '" class="'
-      + classes.join(' ') + '"'
-      + ' title="' + file + '">'
-      + icon + file + (fs.statSync(join(path, file)).isDirectory() ? '/' : '') + '</a></li>';
-  }).join('\n') + '</ul>';
 }
 
 /**
