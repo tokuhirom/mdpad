@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%- title %></title>
+    <link rel='stylesheet' href='/stylesheets/bootstrap.css' />
+    <link rel='stylesheet' href='/stylesheets/prettify.css' />
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <script src="/javascripts/prettify.js"></script>
+    <script src="/javascripts/jquery-1.8.1.min.js"></script>
+    <script src="/javascripts/application.js"></script>
+  </head>
+  <body>
+    <div class="container">
+        <div class="row">
+            <ul class="breadcrumb">
+            <li><a href="/">root</a> /</li>
+            <% paths.forEach(function (e) { %>
+                <% if (e[1].length===0) { return; } %>
+                <% if (e[2]) { %>
+                    <li><a href="<%= e[0] %>"><%= e[1] %></a> /</li>
+                <% } else { %>
+                    <li class="active"><%= e[1] %></li>
+                <% } %>
+            <% }); %>
+            </ul>
+        </div>
+        <div class="row">
+            This file is too large(<%= size %> bytes.).
+        </div>
+    </div>
+  </body>
+</html>

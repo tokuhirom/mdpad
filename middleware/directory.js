@@ -95,10 +95,17 @@ exports = module.exports = function directory(root, options){
             } else if (path.match(/\.(png|bmp|jpg|jpeg|gif)$/)) {
                 res.render('img', { path: req.path, paths: makePathArray(req.path) });
             } else {
-                fs.readFile(path, 'utf-8', function (err, data) {
+                fs.stat(path, function (err, stats) {
                     if (err) return next(err);
-                    var title = '';
-                    res.render('file', { body: data, title: title, paths: makePathArray(dir) });
+                    if (stats.size < 2*1000*1000) {
+                        fs.readFile(path, 'utf-8', function (err, data) {
+                            if (err) return next(err);
+                            var title = '';
+                            res.render('file', { body: data, title: title, paths: makePathArray(dir) });
+                        });
+                    } else {
+                        res.render('largefile', { size: stats.size, title: path, paths: makePathArray(dir) });
+                    }
                 });
             }
         }
