@@ -1,6 +1,6 @@
 {
   "name": "mdpad",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "scripts": {
     "start": "node app"
   },
@@ -12,7 +12,7 @@
     "ejs": "*",
     "mime": "*",
     "github-flavored-markdown": "~1.0.1",
-    "strftime":"~0.4.7",
+    "strftime": "~0.4.7",
     "less-middleware": "*"
   },
   "main": "app.js",
