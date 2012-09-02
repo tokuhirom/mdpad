@@ -6,10 +6,6 @@
  * MIT Licensed
  */
 
-// TODO: icon / style for directories
-// TODO: arrow key navigation
-// TODO: make icons extensible
-
 /**
  * Module dependencies.
  */
@@ -23,12 +19,6 @@ var fs = require('fs')
   , md = require('github-flavored-markdown')
   , strftime = require('strftime')
   , join = path.join;
-
-/*!
- * Icon cache.
- */
-
-var cache = {};
 
 /**
  * Directory:
@@ -87,30 +77,30 @@ exports = module.exports = function directory(root, options){
             });
         });
       } else {
-        if (path.match(/\.(md|mkdn)$/)) {
-            var src = fs.readFileSync(filepath, 'utf-8');
-            var html = md.parse(src);
-            var title = (function () {
-                var m = html.match(/<h1>([^<>]+)<\/h1>/);
-                if (m) {
-                    return m[1];
-                } else {
-                    return 'no title';
-                }
-            })();
-            res.render('md', { html: html, title: title, paths: makePathArray(req.path) });
-        } else if (path.match(/\.(png|bmp|jpg|jpeg|gif)$/)) {
-            if (req.query.raw) {
-                res.sendfile(path);
-            } else {
-                res.render('img', { path: req.path, paths: makePathArray(req.path) });
-            }
+        if (req.query.raw) {
+            res.sendfile(path);
         } else {
-            fs.readFile(path, 'utf-8', function (err, data) {
-                if (err) return next(err);
-                var title = '';
-                res.render('file', { body: data, title: title, paths: makePathArray(dir) });
-            });
+            if (path.match(/\.(md|mkdn)$/)) {
+                var src = fs.readFileSync(filepath, 'utf-8');
+                var html = md.parse(src);
+                var title = (function () {
+                    var m = html.match(/<h1>([^<>]+)<\/h1>/);
+                    if (m) {
+                        return m[1];
+                    } else {
+                        return 'no title';
+                    }
+                })();
+                res.render('md', { html: html, title: title, paths: makePathArray(req.path) });
+            } else if (path.match(/\.(png|bmp|jpg|jpeg|gif)$/)) {
+                res.render('img', { path: req.path, paths: makePathArray(req.path) });
+            } else {
+                fs.readFile(path, 'utf-8', function (err, data) {
+                    if (err) return next(err);
+                    var title = '';
+                    res.render('file', { body: data, title: title, paths: makePathArray(dir) });
+                });
+            }
         }
       }
     });
@@ -125,7 +115,6 @@ function makePathArray(dir) {
         return [curr.join('/'), part, curr.length!==dirs.length];
     });
 }
-exports.makePathArray = makePathArray;
 
 function makeFileArray(path, files, dir) {
     return files.map(function (file) {
