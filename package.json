@@ -1,12 +1,11 @@
 {
-  "name": "pad",
+  "name": "mdpad",
   "version": "0.0.1",
-  "private": true,
   "scripts": {
     "start": "node app"
   },
   "bin": {
-    "pad": "./bin/pad"
+    "mdpad": "./bin/mdpad"
   },
   "dependencies": {
     "express": "3.0.0rc4",
