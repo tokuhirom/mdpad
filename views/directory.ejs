@@ -88,14 +88,21 @@
         </div>
         <div class="row">
             <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>File Name</th>
+                    <th>Date</th>
+                    <th>Size</th>
+                </tr>
+            </thead>
             <tbody>
             <% files.forEach(function (file) { %>
                 <tr>
                     <td class="filename"><span><a href="<%= file[0] %>"><%= file[1] %></a><%= file[2].isDirectory() ? '/' : '' %></span></td>
                     <td>
-                        <%= strftime('%Y-%m-%d(%a) %H:%M', file[2].mtime) %>
+                        <%= ago(new Date(file[2].mtime)) %>
                     </td>
-                    <td>
+                    <td class="size">
                         <%= bytes(file[2].size) %>
                     </td>
                 </tr>

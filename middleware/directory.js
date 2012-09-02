@@ -19,6 +19,7 @@ var fs = require('fs')
   , md = require('github-flavored-markdown')
   , strftime = require('strftime')
   , bytes = require('bytes')
+  , ago = require('../ago.js')
   , join = path.join;
 
 /**
@@ -75,6 +76,7 @@ exports = module.exports = function directory(root, options){
                 files: makeFileArray(path, files, dir),
                 strftime: strftime,
                 bytes: bytes,
+                ago: ago,
                 paths: makePathArray(dir)
             });
         });
