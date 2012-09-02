@@ -95,6 +95,9 @@
                     <td>
                         <%= strftime('%Y-%m-%d(%a) %H:%M', file[2].mtime) %>
                     </td>
+                    <td>
+                        <%= bytes(file[2].size) %>
+                    </td>
                 </tr>
             <% }); %>
             </tbody>

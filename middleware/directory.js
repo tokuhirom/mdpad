@@ -18,6 +18,7 @@ var fs = require('fs')
   , extname = path.extname
   , md = require('github-flavored-markdown')
   , strftime = require('strftime')
+  , bytes = require('bytes')
   , join = path.join;
 
 /**
@@ -73,6 +74,7 @@ exports = module.exports = function directory(root, options){
             res.render('directory', {
                 files: makeFileArray(path, files, dir),
                 strftime: strftime,
+                bytes: bytes,
                 paths: makePathArray(dir)
             });
         });
