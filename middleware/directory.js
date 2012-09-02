@@ -73,20 +73,26 @@ exports = module.exports = function directory(root, options){
         ? next()
         : next(err);
 
-      if (stat.isDirectory()) return next();
+      if (stat.isDirectory()) {
+        // fetch files
+        fs.readdir(path, function(err, files){
+            if (err) return next(err);
+            files.sort();
 
-      // fetch files
-      fs.readdir(path, function(err, files){
-        if (err) return next(err);
-        files.sort();
-
-        res.render('directory', {
-            html: html(path, files, dir),
-            files: makeFileArray(path, files, dir),
-            strftime: strftime,
-            paths: makePathArray(dir)
+            res.render('directory', {
+                html: html(path, files, dir),
+                files: makeFileArray(path, files, dir),
+                strftime: strftime,
+                paths: makePathArray(dir)
+            });
         });
-      });
+      } else {
+        fs.readFile(path, 'utf-8', function (err, data) {
+            if (err) return next(err);
+            var title = '';
+            res.render('file', { body: data, title: title, paths: makePathArray(dir) });
+        });
+      }
     });
   };
 };
