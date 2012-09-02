@@ -2,6 +2,7 @@
   <head>
     <title>listing directory {directory}</title>
     <link rel='stylesheet' href='/stylesheets/bootstrap.css' />
+    <link rel='stylesheet' href='/stylesheets/bootstrap-responsive.css' />
     <link rel='stylesheet' href='/stylesheets/style.css' />
     <script>
       function $(id){
@@ -98,7 +99,7 @@
             <tbody>
             <% files.forEach(function (file) { %>
                 <tr>
-                    <td class="filename"><span><a href="<%= file[0] %>"><%= file[1] %></a><%= file[2].isDirectory() ? '/' : '' %></span></td>
+                    <td class="filename"><span><i class="<%= file[2].isDirectory() ? 'icon-folder-open' : 'icon-file' %>"></i>&nbsp;<a href="<%= file[0] %>"><%= file[1] %></a><%= file[2].isDirectory() ? '/' : '' %></span></td>
                     <td>
                         <%= ago(new Date(file[2].mtime)) %>
                     </td>

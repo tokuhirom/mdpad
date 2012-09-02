@@ -70,10 +70,13 @@ exports = module.exports = function directory(root, options){
         // fetch files
         fs.readdir(path, function(err, files){
             if (err) return next(err);
-            files.sort();
+            files = removeHidden(files);
+            files = makeFileArray(path, files, dir);
+            var f = files.filter(function (a) { return  a[2].isDirectory(); }),
+                d = files.filter(function (a) { return !a[2].isDirectory(); });
 
             res.render('directory', {
-                files: makeFileArray(path, files, dir),
+                files: f.concat(d),
                 strftime: strftime,
                 bytes: bytes,
                 ago: ago,
@@ -85,7 +88,7 @@ exports = module.exports = function directory(root, options){
             res.sendfile(path);
         } else {
             if (path.match(/\.(md|mkdn)$/)) {
-                var src = fs.readFileSync(filepath, 'utf-8');
+                var src = fs.readFileSync(path, 'utf-8');
                 var html = md.parse(src);
                 var title = (function () {
                     var m = html.match(/<h1>([^<>]+)<\/h1>/);
