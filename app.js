@@ -1,7 +1,7 @@
 var express = require('express')
   , md = require('github-flavored-markdown')
   , fs = require('fs')
-  , directory = require('./middleware/directory.js')
+  , directory = require('./src/middleware/directory.js')
   , http = require('http')
   , optimist = require('optimist')
   , path = require('path');

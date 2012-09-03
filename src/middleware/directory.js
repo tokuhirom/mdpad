@@ -12,7 +12,7 @@
 
 var fs = require('fs')
   , parse = require('url').parse
-  , utils = require('../node_modules/express/node_modules/connect/lib/utils')
+  , utils = require('../../node_modules/express/node_modules/connect/lib/utils')
   , path = require('path')
   , normalize = path.normalize
   , extname = path.extname
