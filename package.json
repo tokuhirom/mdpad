@@ -2,7 +2,8 @@
   "name": "mdpad",
   "version": "0.0.4",
   "scripts": {
-    "start": "node app"
+    "start": "node app",
+    "test": "node test.js"
   },
   "bin": {
     "mdpad": "./bin/mdpad"

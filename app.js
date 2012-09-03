@@ -6,7 +6,7 @@ var express = require('express')
   , optimist = require('optimist')
   , path = require('path');
 
-var app = express();
+var app = module.exports = express();
 var argv = optimist
     .alias('p', 'port')
     .argv;
@@ -18,7 +18,9 @@ if (argv._.length===1) {
     console.log("Usage: node app.js docdir");
     process.exit();
 }
-console.log("Path: " + docdir);
+if (!module.parent) {
+    console.log("Path: " + docdir);
+}
 
 app.configure(function(){
   app.set('port', process.env.PORT || argv.port || 3000);
@@ -43,6 +45,8 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
-http.createServer(app).listen(app.get('port'), function(){
-  console.log("Express server listening on port " + app.get('port'));
-});
+if (!module.parent) {
+    http.createServer(app).listen(app.get('port'), function(){
+        console.log("Express server listening on port " + app.get('port'));
+    });
+}
