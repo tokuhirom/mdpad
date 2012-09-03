@@ -18,6 +18,8 @@ var fs = require('fs')
   , extname = path.extname
   , md = require('github-flavored-markdown')
   , strftime = require('strftime')
+  , bytes = require('bytes')
+  , ago = require('../ago.js')
   , join = path.join;
 
 /**
@@ -68,11 +70,16 @@ exports = module.exports = function directory(root, options){
         // fetch files
         fs.readdir(path, function(err, files){
             if (err) return next(err);
-            files.sort();
+            files = removeHidden(files);
+            files = makeFileArray(path, files, dir);
+            var f = files.filter(function (a) { return  a[2].isDirectory(); }),
+                d = files.filter(function (a) { return !a[2].isDirectory(); });
 
             res.render('directory', {
-                files: makeFileArray(path, files, dir),
+                files: f.concat(d),
                 strftime: strftime,
+                bytes: bytes,
+                ago: ago,
                 paths: makePathArray(dir)
             });
         });
@@ -81,7 +88,7 @@ exports = module.exports = function directory(root, options){
             res.sendfile(path);
         } else {
             if (path.match(/\.(md|mkdn)$/)) {
-                var src = fs.readFileSync(filepath, 'utf-8');
+                var src = fs.readFileSync(path, 'utf-8');
                 var html = md.parse(src);
                 var title = (function () {
                     var m = html.match(/<h1>([^<>]+)<\/h1>/);
@@ -95,10 +102,17 @@ exports = module.exports = function directory(root, options){
             } else if (path.match(/\.(png|bmp|jpg|jpeg|gif)$/)) {
                 res.render('img', { path: req.path, paths: makePathArray(req.path) });
             } else {
-                fs.readFile(path, 'utf-8', function (err, data) {
+                fs.stat(path, function (err, stats) {
                     if (err) return next(err);
-                    var title = '';
-                    res.render('file', { body: data, title: title, paths: makePathArray(dir) });
+                    if (stats.size < 2*1000*1000) {
+                        fs.readFile(path, 'utf-8', function (err, data) {
+                            if (err) return next(err);
+                            var title = '';
+                            res.render('file', { body: data, title: title, paths: makePathArray(dir) });
+                        });
+                    } else {
+                        res.render('largefile', { size: stats.size, title: path, paths: makePathArray(dir) });
+                    }
                 });
             }
         }
