@@ -8,6 +8,7 @@
     "mdpad": "./bin/mdpad"
   },
   "dependencies": {
+    "optimist": "*",
     "express": "3.0.0rc4",
     "ejs": "*",
     "mime": "*",
