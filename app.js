@@ -3,13 +3,17 @@ var express = require('express')
   , fs = require('fs')
   , directory = require('./middleware/directory.js')
   , http = require('http')
+  , optimist = require('optimist')
   , path = require('path');
 
 var app = express();
+var argv = optimist
+    .alias('p', 'port')
+    .argv;
 
 var docdir;
-if (process.argv.length===3) {
-    docdir = path.normalize(path.resolve(process.argv[2]));
+if (argv._.length===1) {
+    docdir = path.normalize(path.resolve(argv._[0]));
 } else {
     console.log("Usage: node app.js docdir");
     process.exit();
@@ -17,7 +21,7 @@ if (process.argv.length===3) {
 console.log("Path: " + docdir);
 
 app.configure(function(){
-  app.set('port', process.env.PORT || 3000);
+  app.set('port', process.env.PORT || argv.port || 3000);
   app.set('views', __dirname + '/views');
   app.set('view engine', 'ejs');
   app.use(function (req, res, next) {

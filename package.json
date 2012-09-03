@@ -1,6 +1,6 @@
 {
   "name": "mdpad",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "scripts": {
     "start": "node app"
   },
@@ -8,11 +8,12 @@
     "mdpad": "./bin/mdpad"
   },
   "dependencies": {
+    "optimist": "*",
     "express": "3.0.0rc4",
     "ejs": "*",
     "mime": "*",
     "github-flavored-markdown": "~1.0.1",
-    "strftime":"~0.4.7",
+    "strftime": "~0.4.7",
     "less-middleware": "*"
   },
   "main": "app.js",
