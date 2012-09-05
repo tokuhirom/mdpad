@@ -1,2 +1,3 @@
 #!/usr/bin/env node
+this.mdpad_loader = true;
 require('../app.js');

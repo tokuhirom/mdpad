@@ -45,7 +45,7 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
-if (!module.parent) {
+if (!module.parent || module.parent.exports.mdpad_loader) {
     http.createServer(app).listen(app.get('port'), function(){
         console.log("Express server listening on port " + app.get('port'));
     });
