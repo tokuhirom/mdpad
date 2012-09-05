@@ -13,7 +13,7 @@ Features
 Install
 -------
 
-    $ npm install -g pad
+    $ npm install -g mkpad
 
 Run
 ---
