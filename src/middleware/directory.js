@@ -84,7 +84,7 @@ exports = module.exports = function directory(root, options){
             });
         });
       } else {
-        if (req.query.raw) {
+        if (req.query.hasOwnProperty('raw') || req.headers.accept === '*/*') {
             res.sendfile(path);
         } else {
             if (path.match(/\.(md|mkdn)$/)) {
