@@ -1,6 +1,6 @@
 {
   "name": "mdpad",
-  "version": "0.0.11",
+  "version": "1.0.0",
   "scripts": {
     "start": "node app",
     "test": "node test.js"
